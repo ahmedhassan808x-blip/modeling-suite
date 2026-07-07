@@ -32,6 +32,10 @@ st.caption("Gordon DCF (Python mirror of the live Excel engine, "
            "agreement-tested) vs. market price, ranked by divergence. "
            "Artifact flags tell you when a 'mispricing' is the model's own "
            "limitation showing — rank ≠ conviction.")
+st.sidebar.caption("**More tools in the sidebar ↑** — build live Excel "
+                   "models (3-statement, DCF, LBO, merger), pull news/macro "
+                   "context, generate long/short pitches, or grab the "
+                   "budget template.")
 
 st.sidebar.title("Universe")
 tickers_text = st.sidebar.text_area(

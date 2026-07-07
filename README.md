@@ -1,6 +1,6 @@
 # Modeling Suite
 
-**🎯 Open the Mispricing Scanner (live web app): https://modeling-suite.streamlit.app**
+**🎯 Open the live web app: https://ahmedhassan808x-blip-modeling-suite-scannerapp-zyfmku.streamlit.app** — mispricing scanner, plus pages to build any model (3-statement / DCF / LBO / merger) in the browser, pull news & macro context, generate long/short pitches, and download the budget template.
 
 A financial modeling and research platform: live Excel models (three-statement, DCF, LBO, and more), a presentation/export layer, live market data with AI-assisted context, an investment pitch generator, and a mispricing scanner. Companion project to [analyst-toolkit](../analyst-toolkit) — built standalone first, designed to plug into the same Streamlit dashboard later.
 
@@ -63,7 +63,5 @@ Requires LibreOffice for the recalc verification gate (`brew install --cask libr
 
 The scanner runs cloud-natively (it uses the FMP stable API, no LibreOffice needed). To deploy or redeploy:
 
-1. [One-click deploy](https://share.streamlit.io/deploy?repository=ahmedhassan808x-blip/modeling-suite&branch=main&mainModule=scanner/app.py) (sign in with GitHub), set the URL to `modeling-suite`.
-2. In the app's **Settings → Secrets**, add: `FMP_API_KEY = "your_key"` — the app reads `st.secrets` and falls back to `.env` locally.
-
-The live link above goes active as soon as the deploy finishes.
+1. [One-click deploy](https://share.streamlit.io/deploy?repository=ahmedhassan808x-blip/modeling-suite&branch=main&mainModule=scanner/app.py) (sign in with GitHub). Main module: `scanner/app.py` — the extra tool pages under `scanner/pages/` are picked up automatically, and `packages.txt` installs LibreOffice so the recalc gate and PDF decks work on the cloud.
+2. In the app's **Settings → Secrets**, add `FMP_API_KEY = "your_key"` (required) and `ANTHROPIC_API_KEY = "your_key"` (enables the news-synthesis and pitch pages). The app reads `st.secrets` and falls back to `.env` locally.

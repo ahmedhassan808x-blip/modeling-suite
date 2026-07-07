@@ -1,0 +1,18 @@
+# secrets — never commit
+.env
+
+# caches & bytecode
+.cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# generated artifacts (rebuild with the CLIs)
+*.xlsx
+!tests/fixtures/*.xlsx
+*_deck.pptx
+*_memo.docx
+*_deck.pdf
+*_pitch.md
+*_context.md
+scan_results.csv

@@ -1,0 +1,9 @@
+openpyxl
+requests
+pytest
+matplotlib
+python-pptx
+python-docx
+anthropic
+yfinance
+streamlit

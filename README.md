@@ -1,5 +1,7 @@
 # Modeling Suite
 
+**🎯 Open the Mispricing Scanner (live web app): https://modeling-suite.streamlit.app**
+
 A financial modeling and research platform: live Excel models (three-statement, DCF, LBO, and more), a presentation/export layer, live market data with AI-assisted context, an investment pitch generator, and a mispricing scanner. Companion project to [analyst-toolkit](../analyst-toolkit) — built standalone first, designed to plug into the same Streamlit dashboard later.
 
 Every model this suite produces is a **live Excel workbook** — formulas, not pasted values — following the industry color convention (blue = input, black = formula, green = cross-sheet link) and verified with **zero formula errors** by genuine recalculation in headless LibreOffice before being considered done.
@@ -56,3 +58,12 @@ python3 -m pytest tests/ -m "not live"     # offline suite, recalc gate included
 ```
 
 Requires LibreOffice for the recalc verification gate (`brew install --cask libreoffice`, or the direct download).
+
+## Deploying the scanner web app (Streamlit Community Cloud)
+
+The scanner runs cloud-natively (it uses the FMP stable API, no LibreOffice needed). To deploy or redeploy:
+
+1. [One-click deploy](https://share.streamlit.io/deploy?repository=ahmedhassan808x-blip/modeling-suite&branch=main&mainModule=scanner/app.py) (sign in with GitHub), set the URL to `modeling-suite`.
+2. In the app's **Settings → Secrets**, add: `FMP_API_KEY = "your_key"` — the app reads `st.secrets` and falls back to `.env` locally.
+
+The live link above goes active as soon as the deploy finishes.

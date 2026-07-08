@@ -56,9 +56,48 @@ def ask(prompt: str, system: str = "", max_tokens: int = 2000,
         raise LLMError(f"Claude call failed: {e}") from e
 
 
+def ask_with_search(prompt: str, system: str = "", max_tokens: int = 4000,
+                    model: str = DEFAULT_MODEL, max_searches: int = 8) -> str:
+    """Completion with Anthropic's server-side web search tool enabled —
+    for research that must reflect TODAY's data, not training priors.
+    Returns the final text; raises LLMError on failure."""
+    try:
+        import anthropic
+    except ImportError as e:
+        raise LLMError("anthropic package not installed") from e
+    try:
+        client = anthropic.Anthropic(api_key=_key())
+        msg = client.messages.create(
+            model=model, max_tokens=max_tokens,
+            system=system or anthropic.NOT_GIVEN,
+            tools=[{"type": "web_search_20250305", "name": "web_search",
+                    "max_uses": max_searches}],
+            messages=[{"role": "user", "content": prompt}])
+        return "".join(b.text for b in msg.content
+                       if getattr(b, "type", "") == "text")
+    except LLMError:
+        raise
+    except Exception as e:
+        raise LLMError(f"Claude web-search call failed: {e}") from e
+
+
 def _strip_fences(text: str) -> str:
     m = re.search(r"```(?:json)?\s*(.*?)```", text, re.DOTALL)
     return m.group(1) if m else text
+
+
+def _parse_json_object(text: str) -> dict:
+    """Parse the first balanced JSON object in the text — tolerates prose
+    before/after it, but not truncation or malformed JSON."""
+    cleaned = _strip_fences(text).strip()
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError:
+        start = cleaned.find("{")
+        if start < 0:
+            raise
+        obj, _ = json.JSONDecoder().raw_decode(cleaned[start:])
+        return obj
 
 
 def ask_json(prompt: str, required_keys=(), system: str = "",
@@ -73,7 +112,7 @@ def ask_json(prompt: str, required_keys=(), system: str = "",
     text = call(prompt, system, max_tokens)
     for attempt in (1, 2):
         try:
-            data = json.loads(_strip_fences(text).strip())
+            data = _parse_json_object(text)
             missing = [k for k in required_keys if k not in data]
             if missing:
                 raise LLMError(f"LLM JSON missing keys: {missing}")

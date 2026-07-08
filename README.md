@@ -31,6 +31,8 @@ dcf/               DCF + comps + football field, linked to the 3-statement
 lbo/               LBO: sources & uses, 3-tranche debt schedule, IRR/MOIC
 news/              headlines (yfinance local / FMP cloud) + macro + grounded AI synthesis
 pitch/             long/short pitch generator (md/docx/pptx/pdf, AI-labeled)
+sp500_vs_gold/     dated, sourced S&P-vs-gold allocation brief (live data +
+                   web research + grounded reasoned view; md/xlsx/docx/pdf)
 scanner/           mispricing scanner: agreement-tested DCF mirror + artifact flags
 merger/            M&A accretion/dilution: deal terms, PPA, pro forma EPS
 budget/            budget vs. actual variance template (fill-in workbook)

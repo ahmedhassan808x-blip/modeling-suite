@@ -12,7 +12,8 @@ import streamlit as st
 
 def secrets_to_env():
     try:
-        for k in ("FMP_API_KEY", "ANTHROPIC_API_KEY"):
+        for k in ("FMP_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY",
+                  "LLM_PROVIDER", "CLAUDE_MODEL", "GEMINI_MODEL"):
             if k in st.secrets:
                 os.environ[k] = st.secrets[k]
     except Exception:
@@ -30,8 +31,8 @@ def soffice_available() -> bool:
 
 def anthropic_available() -> bool:
     try:
-        from shared.llm import _key
-        _key()
+        from shared.llm import provider
+        provider()
         return True
     except Exception:
         return False

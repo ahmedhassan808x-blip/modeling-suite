@@ -13,7 +13,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from shared.llm import DEFAULT_MODEL, ask  # noqa: E402
+from shared.llm import active_model, ask  # noqa: E402
 
 SYSTEM = """You are a disciplined markets analyst. Rules, non-negotiable:
 - Use ONLY the material provided. Never invent facts, numbers, events, or
@@ -73,7 +73,7 @@ def format_macro(macro) -> str:
 
 
 def synthesize_context(label: str, headlines: dict, macro: dict,
-                       llm=None, model: str = DEFAULT_MODEL) -> str:
+                       llm=None, model: str | None = None) -> str:
     """Markdown brief, headed by the AI-generated label. Raises if there is
     nothing retrieved to ground on."""
     if not headlines.get("items") and not macro.get("indicators"):
@@ -85,7 +85,8 @@ def synthesize_context(label: str, headlines: dict, macro: dict,
                            macro=format_macro(macro))
     call = llm or (lambda p, s, m: ask(p, system=s, max_tokens=m, model=model))
     body = call(prompt, SYSTEM, 1500)
-    header = (f"> **AI-generated analysis** ({model}) — grounded in the "
+    label = model or (active_model() if llm is None else "injected")
+    header = (f"> **AI-generated analysis** ({label}) — grounded in the "
               "retrieved headlines and macro prints listed below; verify "
               "before relying on it.\n\n")
     return header + body

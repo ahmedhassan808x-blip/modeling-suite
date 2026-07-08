@@ -15,7 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from shared.llm import DEFAULT_MODEL, LLMError, ask_json, ask_with_search  # noqa: E402
+from shared.llm import LLMError, ask_json, ask_with_search  # noqa: E402
 
 NUMERIC_KEYS = ("spx_trailing_pe", "spx_forward_pe", "cape",
                 "spx_dividend_yield_pct", "dxy", "tips_10y_real_yield_pct")
@@ -62,7 +62,7 @@ And one more key:
   named strategists/houses in the last ~2 months."""
 
 
-def research_market_context(model: str = DEFAULT_MODEL, llm=None) -> dict:
+def research_market_context(model: str | None = None, llm=None) -> dict:
     """Returns the researched dict; validates shape; counts gaps honestly."""
     prompt = PROMPT.format(today=date.today().isoformat())
     call = llm or (lambda p, s, m: ask_with_search(p, system=s, max_tokens=m,

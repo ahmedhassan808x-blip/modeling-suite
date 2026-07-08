@@ -67,3 +67,7 @@ The scanner runs cloud-natively (it uses the FMP stable API, no LibreOffice need
 
 1. [One-click deploy](https://share.streamlit.io/deploy?repository=ahmedhassan808x-blip/modeling-suite&branch=main&mainModule=scanner/app.py) (sign in with GitHub). Main module: `scanner/app.py` — the extra tool pages under `scanner/pages/` are picked up automatically, and `packages.txt` installs LibreOffice so the recalc gate and PDF decks work on the cloud.
 2. In the app's **Settings → Secrets**, add `FMP_API_KEY = "your_key"` (required) and `ANTHROPIC_API_KEY = "your_key"` (enables the news-synthesis and pitch pages). The app reads `st.secrets` and falls back to `.env` locally.
+
+## LLM provider
+
+AI features (news synthesis, pitch generator, S&P-vs-gold research) run on **either** Anthropic (`ANTHROPIC_API_KEY`, paid) or **Google Gemini** (`GEMINI_API_KEY` — free tier at https://aistudio.google.com/apikey, includes search grounding). Auto-selection prefers Anthropic when both keys exist; set `LLM_PROVIDER=gemini` to force the free tier. Model overrides: `CLAUDE_MODEL` / `GEMINI_MODEL`.

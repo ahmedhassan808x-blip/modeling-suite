@@ -28,7 +28,9 @@ direction = c2.radio("Direction", ["long", "short"], horizontal=True)
 peers = c3.text_input("Peers for comps (optional)", "MSFT,GOOGL,META").strip()
 
 if not anthropic_available():
-    st.info("Add ANTHROPIC_API_KEY in Settings → Secrets to enable this page.")
+    st.info("Add ANTHROPIC_API_KEY or GEMINI_API_KEY (free: "
+            "aistudio.google.com/apikey) in Settings → Secrets to enable "
+            "this page.")
 elif not soffice_available():
     st.warning("LibreOffice unavailable on this host — the pitch needs it to "
                "recalculate the model and scenario re-runs.")

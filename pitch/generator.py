@@ -27,7 +27,7 @@ from dcf.model_builder import build_dcf_model  # noqa: E402
 from dcf.report import extract_dcf  # noqa: E402
 from news.data_layer import get_headlines, get_macro  # noqa: E402
 from news.synthesis import format_headlines, format_macro  # noqa: E402
-from shared.llm import DEFAULT_MODEL, ask_json  # noqa: E402
+from shared.llm import active_model, ask_json  # noqa: E402
 from three_statement.assumptions import Assumptions  # noqa: E402
 from three_statement.data_layer import fetch_financials  # noqa: E402
 from three_statement.report import N_HIST, scenario_runs  # noqa: E402
@@ -150,7 +150,7 @@ def _scenario_text(facts):
 
 
 def generate_pitch(ticker, direction="long", peers=None, dcf_xlsx=None,
-                   workdir=None, llm=None, model=DEFAULT_MODEL,
+                   workdir=None, llm=None, model=None,
                    use_cache=True) -> dict:
     direction = direction.upper()
     if direction not in ("LONG", "SHORT"):
@@ -168,4 +168,4 @@ def generate_pitch(ticker, direction="long", peers=None, dcf_xlsx=None,
     sections = ask_json(prompt, required_keys=REQUIRED_KEYS, system=SYSTEM,
                         model=model, llm=llm)
     return dict(direction=direction, facts=facts, sections=sections,
-                model=model)
+                model=model or (active_model() if llm is None else "injected"))

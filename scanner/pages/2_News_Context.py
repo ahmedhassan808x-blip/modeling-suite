@@ -36,9 +36,10 @@ if st.button("Get context", type="primary"):
     st.text(format_macro(macro))
 
     if not anthropic_available():
-        st.info("No ANTHROPIC_API_KEY in the app secrets — showing "
-                "retrieved data only, no AI synthesis. Add the key in "
-                "Settings → Secrets to enable it.")
+        st.info("No LLM key in the app secrets — showing retrieved data "
+                "only, no AI synthesis. Add ANTHROPIC_API_KEY or "
+                "GEMINI_API_KEY (free: aistudio.google.com/apikey) in "
+                "Settings → Secrets.")
     else:
         with st.spinner("Synthesizing (grounded, cited)…"):
             try:

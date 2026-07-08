@@ -18,7 +18,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from shared.llm import DEFAULT_MODEL, ask_json  # noqa: E402
+from shared.llm import active_model, ask_json  # noqa: E402
 from sp500_vs_gold.data_layer import fetch_market_data  # noqa: E402
 from sp500_vs_gold.research import research_market_context  # noqa: E402
 
@@ -214,7 +214,7 @@ def facts_text(data, research, der, rows) -> str:
     return "\n".join(lines)
 
 
-def synthesize_view(facts: str, as_of: str, model: str = DEFAULT_MODEL,
+def synthesize_view(facts: str, as_of: str, model: str | None = None,
                     llm=None) -> dict:
     view = ask_json(SYNTH_PROMPT.format(facts=facts, as_of=as_of),
                     required_keys=SYNTH_KEYS, system=SYNTH_SYSTEM,
@@ -224,7 +224,7 @@ def synthesize_view(facts: str, as_of: str, model: str = DEFAULT_MODEL,
     return view
 
 
-def build_brief(use_cache_hist: bool = True, model: str = DEFAULT_MODEL,
+def build_brief(use_cache_hist: bool = True, model: str | None = None,
                 research_llm=None, synth_llm=None) -> dict:
     data = fetch_market_data(use_cache_hist=use_cache_hist)
     research = research_market_context(model=model, llm=research_llm)
@@ -232,6 +232,7 @@ def build_brief(use_cache_hist: bool = True, model: str = DEFAULT_MODEL,
     rows = snapshot_rows(data, research, der)
     facts = facts_text(data, research, der, rows)
     view = synthesize_view(facts, data["as_of"], model=model, llm=synth_llm)
+    label = model or (active_model() if synth_llm is None else "injected")
     return dict(as_of=data["as_of"], data=data, research=research, der=der,
                 rows=rows, macro=macro_paragraphs(data, research, der),
-                view=view, model=model)
+                view=view, model=label)

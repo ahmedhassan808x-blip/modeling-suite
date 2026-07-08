@@ -24,8 +24,9 @@ st.caption("A dated, sourced comparative brief: live prices and macro from "
            "a recommendation. Each run reflects that day's data.")
 
 if not anthropic_available():
-    st.info("Add ANTHROPIC_API_KEY in Settings → Secrets — the research "
-            "layer (web search) and reasoned view need it.")
+    st.info("Add ANTHROPIC_API_KEY or GEMINI_API_KEY (free: "
+            "aistudio.google.com/apikey) in Settings → Secrets — the "
+            "research layer (web search) and reasoned view need it.")
 elif st.button("Build today's brief", type="primary"):
     from sp500_vs_gold.brief import build_brief
     from sp500_vs_gold.report import build_outputs, render_markdown

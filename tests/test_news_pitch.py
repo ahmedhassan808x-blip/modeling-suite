@@ -164,3 +164,19 @@ def test_pitch_outputs_complete_and_labeled(pitch_outputs):
     from pptx import Presentation
     prs = Presentation(outputs["pptx"])
     assert len(prs.slides) >= 5
+
+
+def test_provider_selection(monkeypatch):
+    import shared.llm as llm
+    monkeypatch.setattr(llm, "_env_or_dotenv",
+                        lambda n: "k" if n == "GEMINI_API_KEY" else None)
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+    assert llm.provider() == "gemini"
+    assert llm.active_model() == "gemini-2.5-flash"
+    monkeypatch.setattr(llm, "_env_or_dotenv", lambda n: "k")  # both keys
+    assert llm.provider() == "anthropic"          # auto prefers anthropic
+    monkeypatch.setenv("LLM_PROVIDER", "gemini")  # explicit override wins
+    assert llm.provider() == "gemini"
+    monkeypatch.setenv("LLM_PROVIDER", "banana")
+    with pytest.raises(LLMError, match="Unknown LLM_PROVIDER"):
+        llm.provider()
